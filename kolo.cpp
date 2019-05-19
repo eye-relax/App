@@ -2,6 +2,8 @@
 #include <math.h>
 #include <string.h>
 #include <windows.h>
+#include <QtMultimedia/QMediaPlayer>
+
 #define rozX 50
 #define rozY 50
 
@@ -16,6 +18,7 @@ int funk2(int x)
 
 Kolo::Kolo()
 {
+
     setGeometry(56,100,800,800);
     info=new QLabel(("Krok: "+ std::to_string(krok)+" Czas: "+ std::to_string(czas)).c_str(),this);
     info->setGeometry(0,0,500,20);
@@ -24,12 +27,16 @@ Kolo::Kolo()
     widok = new QGraphicsView(scena, this);
     widok->setGeometry(50, 50, 700, 700);
     x=new QPixmap("C:/Users/Patryk/Desktop/Cos/Kolo2/cos.png");
-    x2=new QPixmap("C:/Users/Patryk/Desktop/Cos/Kolo2/cos2.png");
+    x2=new QPixmap("C:/Users/Patryk/Desktop/Cos/Kolo2/cos2.png");  
+    QMediaPlayer *player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Patryk/Desktop/Cos/Kolo2/mf.wav"));
+    player->setVolume(50);
+    player->play();
     *x=x->scaled(50,50);
     *x2=x2->scaled(50,50);
     kolo = new QGraphicsPixmapItem(*x);
     scena->addItem(kolo);
-    zaczynamy(2);
+    zaczynamy(1);
 }
 
 Kolo::~Kolo()
@@ -88,6 +95,7 @@ void Kolo::keyPressEvent(QKeyEvent *Event)
 }
 void Kolo::zaczynamy(int i)
 {
+
     connect(&timer, SIGNAL(timeout()), this, SLOT(zmiana()));
     switch(i)
     {

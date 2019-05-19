@@ -6,9 +6,7 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QTimer>
-#include <QPen>
 #include <QGraphicsPixmapItem>
-#include <QGraphicsEllipseItem>
 #include <QDebug>
 #include <QLabel>
 #include <string>
@@ -33,6 +31,7 @@ private:
     QPixmap *x;
     QPixmap *x2;
     QLabel *info;
+
     void zaczynamy(int i);
 
 
