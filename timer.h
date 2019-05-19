@@ -13,21 +13,18 @@ public:
     void startWorking();
     void setWorkingInterval(QTime time);
     void stopWorking();
-    QTime remainingTime();
+    QTime remaining();
+    static QTime elapsed(QTime first,QTime second);
 private:
+    QTime workingTime;
     void createWorkTimer();
     QTimer* WorkTimer;
+
+
 signals:
 
 public slots:
-    void test()
-    {
-        qDebug() << "update";
-        qDebug()<<this->remainingTime().toString("hh:mm:ss.zzz");
-        qDebug()<<this->remainingTime().toString("hh:mm:ss.zzz");
-        qDebug()<<this->remainingTime().toString("hh:mm:ss.zzz");
-        qDebug()<<this->remainingTime().toString("hh:mm:ss.zzz");
-    }
+
 };
 
 #endif // TIMER_H
