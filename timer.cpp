@@ -8,9 +8,18 @@ Timer::Timer(QObject *parent) : QObject(parent)
 void Timer::createWorkTimer()
 {
     WorkTimer=new QTimer(this);
-    setWorkingInterval(WorkTimer);
+    setWorkingInterval(QTime(0,0));
     WorkTimer->setTimerType(Qt::VeryCoarseTimer);
-    connect(WorkTimer,SIGNAL(timeout()),this,SLOT(test()));
+                                              //SLOT
+    //connect(WorkTimer,SIGNAL(timeout()),this,SLOT());
+}
+
+QTime Timer::elapsed(QTime first,QTime second)
+{
+    int sec1=first.hour()*3600+first.minute()*60+first.second();
+    int sec2=second.hour()*3600+second.minute()*60+second.second();
+    int r=sec1-sec2;
+    return QTime(r/3600,(r%3600)/60,(r%3600)%60);
 }
 
 
@@ -20,16 +29,20 @@ void Timer::startWorking()
     WorkTimer->start();
 }
 
-
-//remake so that it can take second parameter named "interval"(maybe a string?)
-
-//i don't know how yet
-void Timer::setWorkingInterval(QTimer* timer)
+void Timer::setWorkingInterval(QTime arg)
 {
-    timer->setInterval(1000);
+    this->workingTime=arg;
+    int milis=(workingTime.hour()*3600+workingTime.minute()*60+workingTime.second())*1000;
+    WorkTimer->setInterval(milis);
 }
 
 void Timer::stopWorking()
 {
     WorkTimer->stop();
+}
+
+QTime Timer::remaining()
+{
+    return QTime(0,0, WorkTimer->remainingTime()/1000);
+
 }
