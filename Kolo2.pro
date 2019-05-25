@@ -29,3 +29,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \ \
     kolo.h
+
+RESOURCES += \
+    res.qrc

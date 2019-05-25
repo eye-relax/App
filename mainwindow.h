@@ -2,10 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsView>
-#include <QTimer>
-#include <QLabel>
-#include <QWidget>
+
 #include "kolo.h"
 
 class MainWindow : public QMainWindow

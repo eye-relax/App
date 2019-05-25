@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>pliki/cos.png</file>
+        <file>pliki/cos2.png</file>
+        <file>pliki/why.wav</file>
+    </qresource>
+</RCC>

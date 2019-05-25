@@ -9,7 +9,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setGeometry(56,100,800,800);
+    setGeometry(56,100,900,900);
     this->setCentralWidget(&k); //tu jest włączenie klasy "Kolo" do okna
 }
 
