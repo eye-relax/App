@@ -32,3 +32,5 @@ HEADERS  += mainwindow.h \ \
 
 RESOURCES += \
     res.qrc
+
+DISTFILES +=

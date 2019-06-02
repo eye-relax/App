@@ -27,6 +27,8 @@ public:
     long czas=10;
     long czaszmiany=500;
     int cwiczenie=1;
+    int i=0;
+    bool zaczniete=0;
     std::map <int,std::string> opisy;
 private:
     QGraphicsView *widok;

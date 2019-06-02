@@ -10,6 +10,8 @@
 
 Kolo::Kolo()
 {
+
+    this->setFocus();
     font=new QFont( "Arial", 15, QFont::Bold);
     opisy[1]="Mrugaj tak czesto jak jablko zmienia barwe.";
     opisy[2]="Poruszaj oczami góra/dół tak jak pokazuje jabłko.";
@@ -35,7 +37,6 @@ Kolo::Kolo()
     player = new QMediaPlayer;
     player->setMedia(QUrl("qrc:/img/pliki/why.wav"));
     player->setVolume(50);
-    //player->play();
     x=new QPixmap(":/img/pliki/cos.png");
     x2=new QPixmap(":/img/pliki/cos2.png");
     *x=x->scaled(50,50);
@@ -44,15 +45,21 @@ Kolo::Kolo()
     kolo->setX(275);
     kolo->setY(300);
     scena->addItem(kolo);
-    poprz=new QPushButton("Poprzedni",this);
-    poprz->setGeometry(QRect(QPoint(100, 40),QSize(200, 50)));
-    nast=new QPushButton("Nastepny",this);
-    nast->setGeometry(QRect(QPoint(600, 40),QSize(200, 50)));
+    nast=new QPushButton(QIcon(QPixmap(":/img/pliki/gowno.png").scaled(50,700)),"",this);
+    nast->setIconSize(QSize(50,700));
+    nast->setGeometry(QRect(QPoint(810, 100),QSize(50, 700)));
+    nast->setStyleSheet("QPushButton {border-style: outset; border-width: 0px;}");
+    poprz=new QPushButton(QIcon(QPixmap(":/img/pliki/gowno2.png").scaled(50,700)),"",this);
+    poprz->setIconSize(QSize(50,700));
+    poprz->setGeometry(QRect(QPoint(40, 100),QSize(50, 700)));
+    poprz->setStyleSheet("QPushButton {border-style: outset; border-width: 0px;}");
     zacz=new QPushButton("Start",this);
     zacz->setGeometry(QRect(QPoint(350, 40),QSize(200, 50)));
     connect(nast, SIGNAL(clicked()), this, SLOT(plus()));
     connect(poprz, SIGNAL(clicked()), this, SLOT(minus()));
     connect(zacz, SIGNAL(clicked()), this, SLOT(zaczynamy()));
+    player->play();
+
 }
 
 Kolo::~Kolo()
@@ -68,8 +75,9 @@ Kolo::~Kolo()
 }
 void Kolo::zaczynamy()
 {
+    zaczniete=1;
     wybor=0;
-    qDebug()<<"hej";
+    //()<<"hej";
     switch(cwiczenie)
     {
     case 1://mruganie
@@ -79,8 +87,8 @@ void Kolo::zaczynamy()
             krok=5;
             connect(&timer, SIGNAL(timeout()), this, SLOT(mruganie()));
             connect(&odzmiany, SIGNAL(timeout()), this, SLOT(zmiana()));
-            timer.start(czas);
             odzmiany.start(czas);
+            timer.start(czas);
     break;
     case 2://goradol;
             kolo->setX(275);
@@ -108,48 +116,32 @@ void Kolo::zaczynamy()
             timer.start(czas);
     break;
     }
+    disconnect(zacz, SIGNAL(clicked()), this, SLOT(zaczynamy()));
+    connect(zacz, SIGNAL(clicked()), this, SLOT(zatrzymanie()));
+    zacz->setText("Stop");
 
 
 }
 void Kolo::keyPressEvent(QKeyEvent *Event)
 {
+    //qDebug()<<Event->key();
     switch (Event->key()) {
-    case Qt::Key_W:
-    kolo->setY(kolo->y()-1);
-        break;
-    case Qt::Key_S:
-    kolo->setY(kolo->y()+1);
-        break;
     case Qt::Key_A:
-    kolo->setX(kolo->x()-1);
+    minus();
         break;
     case Qt::Key_D:
-    kolo->setX(kolo->x()+1);
+    plus();
         break;
-    case Qt::Key_E:
-        timer.stop();
+    case Qt::Key_Up:
+        qDebug()<<"Masakra";
+        minus();
         break;
-    case Qt::Key_Q:
-        timer.start(czas);
+    case Qt::Key_Right:
+        plus();
         break;
-    case Qt::Key_Z:
-        czas+=1;
-        info->setText(("Krok: "+ std::to_string(krok)+" Czas: "+ std::to_string(czas)).c_str());
-        timer.start(czas);
-        break;
-    case Qt::Key_X:
-        if((czas-=1)<1)czas=1;
-        info->setText(("Krok: "+ std::to_string(krok)+" Czas: "+ std::to_string(czas)).c_str());
-        timer.start(czas);
-        break;
-    case Qt::Key_C:
-        krok+=1;
-        info->setText(("Krok: "+ std::to_string(krok)+" Czas: "+ std::to_string(czas)).c_str());
-        break;
-    case Qt::Key_V:
-        if((krok-=1)<1)krok=1;
-        info->setText(("Krok: "+ std::to_string(krok)+" Czas: "+ std::to_string(czas)).c_str());
-        timer.start(czas);
+    case Qt::Key_Return:
+        if(zaczniete==0)zaczynamy();
+        else zatrzymanie();
         break;
     default:
         break;
@@ -158,7 +150,6 @@ void Kolo::keyPressEvent(QKeyEvent *Event)
 
 void Kolo::zmiana()
 {
-    static int i=0;
     if(i==0){kolo->setPixmap(*x2);++i;}
     else{kolo->setPixmap(*x);--i;}
 }
@@ -222,7 +213,7 @@ void Kolo::goradol()
         kolo->setX(275);
         kolo->setY(kolo->y()+krok);
     }
-    else if(wybor>=450/krok&&wybor<900/krok)
+    else if(wybor>=450/krok&&wybor<899/krok)
     {
         kolo->setX(275);
         kolo->setY(kolo->y()-krok);
@@ -254,12 +245,14 @@ void Kolo::minus()
 }
 void Kolo::zatrzymanie()
 {
+    zaczniete=0;
     switch(cwiczenie)
     {
     case 1://mruganie
-        disconnect(&timer, SIGNAL(timeout()), this, SLOT(mruganie()));
         disconnect(&odzmiany, SIGNAL(timeout()), this, SLOT(zmiana()));
+        disconnect(&timer, SIGNAL(timeout()), this, SLOT(mruganie()));
         kolo->setPixmap(*x);
+        i=0;
     break;
     case 2://goradol;
         disconnect(&timer, SIGNAL(timeout()), this, SLOT(goradol()));
@@ -274,4 +267,8 @@ void Kolo::zatrzymanie()
     kolo->setX(275);kolo->setY(300);
     timer.stop();
     odzmiany.stop();
+    disconnect(zacz, SIGNAL(clicked()), this, SLOT(zatrzymanie()));
+    connect(zacz, SIGNAL(clicked()), this, SLOT(zaczynamy()));
+    zacz->setText("Start");
+
 }
